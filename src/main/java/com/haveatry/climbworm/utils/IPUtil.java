@@ -9,9 +9,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class IPUtils {
+public class IPUtil {
 
-	public static final String IP_ADDRESS = "https://www.kuaidaili.com/free/inha/";// 要加上页数
+	private static final String IP_ADDRESS = "https://www.kuaidaili.com/free/inha/";// 要加上页数
 	public static final String PICT_ADDRESS="http://www.aiimg.com/photoshop/brush_";//要加上页数 和.html
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 

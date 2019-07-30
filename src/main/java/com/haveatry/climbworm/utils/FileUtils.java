@@ -45,17 +45,9 @@ public class FileUtils {
 		}
 	}
 
-	public static List<Map<String, Object>> getIPsFromFile() {
+	public static List<Map<String, Object>> getIPsFromFile(String url) {
 		List<Map<String, Object>> maps = new ArrayList<>();
-		File file = new File("d:\\ip.txt");
-		if (!file.exists()) {
-			try {
-				writeFile(IPUtils.getIPsMehod());
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		File file = new File(url);
 		String line = null;
 		InputStreamReader reader = null;
 		BufferedReader br = null;
@@ -126,16 +118,7 @@ public class FileUtils {
 
 	
 	public void getPict(String address,String dirName,String fileName) throws Exception {
-		// new一个URL对象
-		URL url = new URL(address);
-		// 打开链接
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//		java.io.IOException: Server returned HTTP response code: 403 for URL
-		conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
-		// 设置请求方式为"GET"
-		conn.setRequestMethod("GET");
-		// 超时响应时间为5秒
-		conn.setConnectTimeout(5 * 1000);
+		HttpURLConnection conn = HttpUtil.getConnection(address);
 		// 通过输入流获取图片数据
 		InputStream inStream = conn.getInputStream();
 		// 得到图片的二进制数据，以二进制封装得到数据，具有通用性

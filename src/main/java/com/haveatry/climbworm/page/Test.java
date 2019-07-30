@@ -6,14 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.haveatry.climbworm.utils.FileUtils;
 import com.haveatry.climbworm.utils.GetPageUtils;
-import com.haveatry.climbworm.utils.IPUtils;
+import com.haveatry.climbworm.utils.IPUtil;
 import com.haveatry.climbworm.utils.JsoupUtils;
 
 public class Test {
@@ -45,10 +43,10 @@ public class Test {
 			threadPoolExecutor.execute(new Runnable() {
 				@Override
 				public void run() {
-					String ip = IPUtils.PICT_ADDRESS + index + ".html";
+					String ip = IPUtil.PICT_ADDRESS + index + ".html";
 					String html = GetPageUtils.getPageFullMethod(ip);
 					List<String> pictNewAdds = JsoupUtils.getElements(html, "target", "_blank", "attr", "href", "");
-					String www = IPUtils.PICT_ADDRESS.substring(0, IPUtils.PICT_ADDRESS.indexOf("com") + 3);
+					String www = IPUtil.PICT_ADDRESS.substring(0, IPUtil.PICT_ADDRESS.indexOf("com") + 3);
 					String newAdd = null;
 					for (int a = 0, b = pictNewAdds.size(); a < b; a++) {
 						if (pictNewAdds.get(a) != null) {
@@ -121,7 +119,7 @@ public class Test {
 	 * @throws IOException
 	 */
 	private static void getIPsMehod() throws ParseException, IOException {
-		FileUtils.writeFile(IPUtils.getIPsMehod());
+		FileUtils.writeFile(IPUtil.getIPsMehod());
 		// List<Map<String, Object>> aList = JSoupUtils.getElements(firstPage,
 		// "a", "", "", "attr", "href", true);
 		List<Map<String, Object>> aList = null;

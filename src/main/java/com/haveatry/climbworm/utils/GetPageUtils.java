@@ -129,30 +129,21 @@ public class GetPageUtils {
 	public static String getPageFullMethod(String adddress) {
 		String page = null;
 		CloseableHttpClient client = HttpClients.createDefault();
-		HttpGet httpGet = new HttpGet(adddress);
-		// 使用动态ip start ，处理网站反爬虫机制
 		HttpHost proxy = null;
 		List<Map<String, Object>> ips = null;
 		if (ips == null) {
-			ips = FileUtils.getIPsFromFile();
+			try {
+				ips = FileUtils.getIPsFromFile(ResourceUtil.getPropertyValue("ip-address"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		if (ips != null && ips.size() > 0 && pageSize < ips.size()) {
 			System.out.println("pageSize:" + pageSize);
 			System.out.println(ips.get(pageSize).get("ip") + ":" + ips.get(pageSize).get("port"));
-			proxy = new HttpHost((String) ips.get(pageSize).get("ip"),
-					Integer.parseInt((String) ips.get(pageSize).get("port")));
+			proxy = HttpUtil.getHttpHost(ips.get(pageSize).get("ip").toString(),Integer.parseInt(ips.get(pageSize).get("port").toString()));
 		}
-		RequestConfig config = null;
-		config = RequestConfig.custom().setProxy(proxy).build();
-		httpGet.setConfig(config);
-		// 使用动态ip end ，处理网站反爬虫机制
-		// 设置连接时间，读取时间start
-		config = RequestConfig.custom().setConnectTimeout(60000).setSocketTimeout(60000).build();
-		httpGet.setConfig(config);
-		// 设置连接时间，读取时间end
-		// 模拟浏览器进行访问，需要证书设置
-		httpGet.setHeader("User-Agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36");
+		HttpGet httpGet = HttpUtil.getHttpGet(adddress,proxy);
 		try {
 			CloseableHttpResponse httpResponse = client.execute(httpGet);
 			if (httpResponse.getStatusLine().getStatusCode() == 403) {
