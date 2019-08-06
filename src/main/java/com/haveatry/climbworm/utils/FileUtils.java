@@ -90,7 +90,7 @@ public class FileUtils {
 		try {
 			url = new URL(urlList);
 			DataInputStream dataInputStream = new DataInputStream(url.openStream());
-
+			//System.getProperty("user.dir") 获取当前程序路径
 			File file = new File(System.getProperty("user.dir")+"\\" + index + "\\" + name);
 			File parentFile = file.getParentFile();
 			if (!parentFile.exists()) {
@@ -105,12 +105,9 @@ public class FileUtils {
 			while ((length = dataInputStream.read(buffer)) > 0) {
 				output.write(buffer, 0, length);
 			}
-			byte[] context = output.toByteArray();
 			fileOutputStream.write(output.toByteArray());
 			dataInputStream.close();
 			fileOutputStream.close();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

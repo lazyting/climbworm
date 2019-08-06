@@ -7,7 +7,7 @@ import java.util.concurrent.Executors;
 
 import com.haveatry.climbworm.utils.FileUtils;
 import com.haveatry.climbworm.utils.GetPageUtils;
-import com.haveatry.climbworm.utils.JsoupUtils;
+import com.haveatry.climbworm.service.JsoupHandle;
 
 public class ExeMain {
 	private static ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(5);
@@ -26,13 +26,13 @@ public class ExeMain {
 					String ipPrefix = "https://www.68ps.com";
 					String fullIp = ipPrefix + "/enjoy/?page=" + index;
 					String html = GetPageUtils.getPageFullMethod(fullIp);
-					List<String> pictNewAdds = JsoupUtils.getElements(html, "target", "_blank", "attr", "href", "");
+					List<String> pictNewAdds = JsoupHandle.getElements(html, "target", "_blank", "attr", "href", "");
 					if (pictNewAdds != null && pictNewAdds.size() > 0 && !pictNewAdds.isEmpty()) {
 						for (int j = 0; j < pictNewAdds.size(); j++) {
 							String html1 = GetPageUtils.getPageFullMethod(ipPrefix + pictNewAdds.get(j));
-							List<Map<String, Object>> fileName = (List<Map<String, Object>>) JsoupUtils
+							List<Map<String, Object>> fileName = (List<Map<String, Object>>) JsoupHandle
 									.getElements(html1, "h1", "", "", "", "", true);
-							List<Map<String, Object>> pictNewAddss = (List<Map<String, Object>>) JsoupUtils
+							List<Map<String, Object>> pictNewAddss = (List<Map<String, Object>>) JsoupHandle
 									.getElements(html1, "img", "", "", "attr", "src", true);
 							if (pictNewAddss != null && pictNewAddss.size() > 0 && !pictNewAddss.isEmpty()) {
 								for (int k = 0; k < pictNewAddss.size(); k++) {

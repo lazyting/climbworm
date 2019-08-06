@@ -94,9 +94,7 @@ public class GetPageUtils {
 	public static String httpLikeBrower(String adddress) {
 		String page = null;
 		CloseableHttpClient client = HttpClients.createDefault();
-		HttpGet httpGet = new HttpGet(adddress);
-		httpGet.setHeader("User-Agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36");
+		HttpGet httpGet = HttpUtil.getHttpGet(adddress);
 		CloseableHttpResponse response = null;
 		try {
 			response = client.execute(httpGet);

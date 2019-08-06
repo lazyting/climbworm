@@ -59,4 +59,16 @@ public class HttpUtil {
         httpGet.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36");
         return httpGet;
     }
+    /**
+     * 根据要访问的地址和host参数获得get方法
+     *
+     * @param adddress
+     * @return
+     */
+    public static HttpGet getHttpGet(String adddress) {
+        HttpGet httpGet = new HttpGet(adddress);
+        // 模拟浏览器进行访问，需要证书设置
+        httpGet.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36");
+        return httpGet;
+    }
 }

@@ -1,5 +1,7 @@
 package com.haveatry.climbworm.utils;
 
+import com.haveatry.climbworm.service.JsoupHandle;
+
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,7 +22,7 @@ public class IPUtil {
 		for (int i = 1;; i++) {
 			String ip = IP_ADDRESS + "" + i;
 			String html = GetPageUtils.getPageFullMethod(ip);
-			String timeStr = JsoupUtils.getElementByAttribute(html, "data-title", "最后验证时间");
+			String timeStr = JsoupHandle.getElementByAttribute(html, "data-title", "最后验证时间");
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.DATE, -2);
 			if (timeStr != null) {
@@ -28,7 +30,7 @@ public class IPUtil {
 				if (date.before(cal.getTime())) {
 					break;
 				} else {
-					List<Map<String, Object>> maps = JsoupUtils.getElement(html);
+					List<Map<String, Object>> maps = JsoupHandle.getElement(html);
 					mapIPs.addAll(maps);
 				}
 			}

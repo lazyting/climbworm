@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.haveatry.climbworm.utils.FileUtils;
 import com.haveatry.climbworm.utils.GetPageUtils;
 import com.haveatry.climbworm.utils.IPUtil;
-import com.haveatry.climbworm.utils.JsoupUtils;
+import com.haveatry.climbworm.service.JsoupHandle;
 
 public class Test {
 	private static ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(5);
@@ -45,7 +45,7 @@ public class Test {
 				public void run() {
 					String ip = IPUtil.PICT_ADDRESS + index + ".html";
 					String html = GetPageUtils.getPageFullMethod(ip);
-					List<String> pictNewAdds = JsoupUtils.getElements(html, "target", "_blank", "attr", "href", "");
+					List<String> pictNewAdds = JsoupHandle.getElements(html, "target", "_blank", "attr", "href", "");
 					String www = IPUtil.PICT_ADDRESS.substring(0, IPUtil.PICT_ADDRESS.indexOf("com") + 3);
 					String newAdd = null;
 					for (int a = 0, b = pictNewAdds.size(); a < b; a++) {
@@ -56,7 +56,7 @@ public class Test {
 								newAdd = pictNewAdds.get(a);
 							}
 							String newPictHtml = GetPageUtils.getPageFullMethod(newAdd);
-							List<String> divs = JsoupUtils.getElements(newPictHtml, "class", "imgbox", "attr", "src",
+							List<String> divs = JsoupHandle.getElements(newPictHtml, "class", "imgbox", "attr", "src",
 									"img");
 							if (divs != null && divs.size() > 0 && !divs.isEmpty()) {
 								FileUtils.downloadPicture(divs.get(0), String.valueOf(a), "pict_" + a + ".png");
