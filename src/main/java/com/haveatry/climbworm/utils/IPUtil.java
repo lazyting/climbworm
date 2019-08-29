@@ -21,7 +21,7 @@ public class IPUtil {
 		List<Map<String, Object>> mapIPs = new ArrayList<>();
 		for (int i = 1;; i++) {
 			String ip = IP_ADDRESS + "" + i;
-			String html = GetPageUtils.getPageFullMethod(ip);
+			String html = GetPageUtils.getPageNoUseIp(ip);
 			String timeStr = JsoupHandle.getElementByAttribute(html, "data-title", "最后验证时间");
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.DATE, -2);

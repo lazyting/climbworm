@@ -176,4 +176,13 @@ public class JsoupHandle {
         }
         return maps;
     }
+    public static List<?> getElements(JsoupModel jsoupModel,String aa) {
+        Document document = jsoupModel.getDocument();
+        if (StringUtils.isNotEmpty(jsoupModel.getInnerHTML())){
+            Element element = document.select("a:contains("+jsoupModel.getInnerHTML()+")").last();
+            System.out.println(element);
+        }
+        return null;
+    }
+
 }

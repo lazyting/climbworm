@@ -25,11 +25,11 @@ public class ExeMain {
 				public void run() {
 					String ipPrefix = "https://www.68ps.com";
 					String fullIp = ipPrefix + "/enjoy/?page=" + index;
-					String html = GetPageUtils.getPageFullMethod(fullIp);
+					String html = GetPageUtils.getPage(fullIp);
 					List<String> pictNewAdds = JsoupHandle.getElements(html, "target", "_blank", "attr", "href", "");
 					if (pictNewAdds != null && pictNewAdds.size() > 0 && !pictNewAdds.isEmpty()) {
 						for (int j = 0; j < pictNewAdds.size(); j++) {
-							String html1 = GetPageUtils.getPageFullMethod(ipPrefix + pictNewAdds.get(j));
+							String html1 = GetPageUtils.getPage(ipPrefix + pictNewAdds.get(j));
 							List<Map<String, Object>> fileName = (List<Map<String, Object>>) JsoupHandle
 									.getElements(html1, "h1", "", "", "", "", true);
 							List<Map<String, Object>> pictNewAddss = (List<Map<String, Object>>) JsoupHandle

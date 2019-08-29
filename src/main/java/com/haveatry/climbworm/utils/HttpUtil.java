@@ -60,9 +60,9 @@ public class HttpUtil {
         httpGet.setConfig(config);// 使用动态ip ，处理网站反爬虫机制
         try {
             config = RequestConfig.custom()
-                    .setConnectTimeout(Integer.parseInt(ResourceUtil.getPropertyValue("connecttimeout")))
-                    .setSocketTimeout(Integer.parseInt(ResourceUtil.getPropertyValue("sockettimeout"))).build();// 设置连接时间，读取时间
-        } catch (IOException e) {
+                    .setConnectTimeout(Integer.parseInt(ResourceUtil.getProperty("connecttimeout")))
+                    .setSocketTimeout(Integer.parseInt(ResourceUtil.getProperty("sockettimeout"))).build();// 设置连接时间，读取时间
+        } catch (Exception e) {
             e.printStackTrace();
         }
         httpGet.setConfig(config);

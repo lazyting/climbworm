@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -16,32 +15,59 @@ public class FileUtils {
     static URL url = FileUtils.class.getClassLoader().getResource("ip.txt");
 
     /**
+     * 绝对路径
+     *
+     * @param fileName
+     * @return
+     */
+    public static String getFileRelativePath(String fileName) {
+        System.out.println(FileUtils.class.getClassLoader().getResource(fileName));
+        System.out.println(FileUtils.class.getClassLoader().getResource(fileName).getPath());
+        return FileUtils.class.getClassLoader().getResource(fileName).getPath();
+    }
+
+    /**
      * 获取的ip存入到文件
      *
      * @param object
      * @throws IOException
      */
-    public static void writeFile(Object object) throws IOException {
-        File file = new File("d:\\ip.txt");
+    public static void writeFile(Object object, String filePath) throws IOException {
+        File file = new File(filePath);
         if (!file.exists()) {
             file.createNewFile();
         }
         if (object instanceof List) {
-            OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
-            BufferedWriter bw = new BufferedWriter(osw);
-            if (object instanceof List) {
-                for (Map<String, Object> map : (List<Map<String, Object>>) object) {
-                    bw.write(map.get("ip") + ":" + map.get("port") + "\r\n");
+            OutputStreamWriter osw = null;
+            BufferedWriter bw = null;
+            try {
+                osw = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
+                bw = new BufferedWriter(osw);
+                if (object instanceof List) {
+                    for (Map<String, Object> map : (List<Map<String, Object>>) object) {
+                        bw.write(map.get("ip") + ":" + map.get("port") + "\r\n");
+                    }
                 }
+            } finally {
+                if (bw != null)
+                    bw.close();
+                if (osw != null)
+                    osw.close();
             }
-            bw.close();
-            osw.close();
         }
     }
 
     public static List<Map<String, Object>> getIPsFromFile(String url) {
         List<Map<String, Object>> maps = new ArrayList<>();
         File file = new File(url);
+        if (!file.exists()) {
+            try {
+                List<Map<String, Object>> ipMaps = IPUtil.getIPsMehod();
+                writeFile(ipMaps, url);
+                file = new File(url);
+            } catch (Exception e) {
+            }
+        }
         String line = null;
         InputStreamReader reader = null;
         BufferedReader br = null;
@@ -54,6 +80,10 @@ public class FileUtils {
                 map.put("ip", line.split(":")[0]);
                 map.put("port", line.split(":")[1]);
                 maps.add(map);
+            }
+            if (maps == null || maps.isEmpty() || maps.size() == 0) {
+                maps = IPUtil.getIPsMehod();
+                writeFile(maps, url);
             }
         } catch (Exception e) {
             e.printStackTrace();
