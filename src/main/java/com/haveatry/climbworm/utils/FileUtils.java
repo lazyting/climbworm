@@ -147,6 +147,7 @@ public class FileUtils {
 
     /**
      * 下载视频
+     * java
      *
      * @param httpUrl
      * @param saveToFilePath
@@ -157,19 +158,12 @@ public class FileUtils {
         }
         // 1.下载网络文件
         int byteRead;
-        URL url = null;
         InputStream inStream = null;
         FileOutputStream fos = null;
-        URLConnection conn = null;
-        try {
-            url = new URL(httpUrl);
-        } catch (MalformedURLException e1) {
-            e1.printStackTrace();
-        }
 
         try {
             //2.获取链接
-            conn = url.openConnection();
+            URLConnection conn = HttpUtil.getConnection(httpUrl);
             //3.输入流
             inStream = conn.getInputStream();
             //3.写入文件
