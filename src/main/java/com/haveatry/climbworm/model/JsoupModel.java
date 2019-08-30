@@ -1,6 +1,7 @@
 package com.haveatry.climbworm.model;
 
 
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -8,24 +9,24 @@ import java.util.List;
 
 public class JsoupModel {
     private Document document;//html转化的document
-    private String tagName;//标签名
     private String html;//html文档
-    private String key;
-    private String value;
-    private String attributeName;//属性名
+    private String tagName;//标签名
+    private String attribute;//属性名
     private String attributeValue;//属性值
-    private String properName;
-    private String properValue;
-    private List<Result> results;//处理后的结果
-    private String innerHTML;
+    private String innerHTML;//元素展示的文字
+    private String selector;//选择器
+    private boolean last;
+    private boolean first;
     private boolean flag;
     private Object ext1;
     private Object ext2;
     private Object ext3;
+    private List<Result> results;//处理后的结果
 
     public JsoupModel(String html) {
         this.html = html;
-        this.document = Jsoup.parse(html);
+        if (!StringUtils.endsWithIgnoreCase("-1", html))
+            this.document = Jsoup.parse(html);
     }
 
     public JsoupModel useTgName(String tagName) {
@@ -38,10 +39,46 @@ public class JsoupModel {
         return this;
     }
 
-    public JsoupModel useAttribute(String attributeName, String attributeValue) {
-        this.setAttributeName(attributeName);
+    public JsoupModel useAttribute(String attribute, String attributeValue) {
+        this.setAttribute(attribute);
         this.setAttributeValue(attributeValue);
         return this;
+    }
+
+    public JsoupModel addSelector(String selector) {
+        this.setSelector(selector);
+        return this;
+    }
+
+    public JsoupModel clearModel() {
+        this.setSelector("");
+        this.setTagName("");
+        this.setInnerHTML("");
+        this.setAttribute("");
+        this.setAttributeValue("");
+        return this;
+    }
+
+    public JsoupModel getLastOrFirstEle(boolean first, boolean last) {
+        this.setLast(last);
+        this.setFirst(first);
+        return this;
+    }
+
+    public boolean isLast() {
+        return last;
+    }
+
+    public void setLast(boolean last) {
+        this.last = last;
+    }
+
+    public boolean isFirst() {
+        return first;
+    }
+
+    public void setFirst(boolean first) {
+        this.first = first;
     }
 
     public Document getDocument() {
@@ -60,22 +97,6 @@ public class JsoupModel {
         this.tagName = tagName;
     }
 
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
     public List<Result> getResults() {
         return results;
     }
@@ -92,20 +113,30 @@ public class JsoupModel {
         this.innerHTML = innerHTML;
     }
 
+    public String getSelector() {
+        return selector;
+    }
+
+    public void setSelector(String selector) {
+        this.selector = selector;
+    }
+
     public String getHtml() {
         return html;
     }
 
     public void setHtml(String html) {
         this.html = html;
+        if (!StringUtils.endsWithIgnoreCase("-1", html))
+            this.document = Jsoup.parse(html);
     }
 
-    public String getAttributeName() {
-        return attributeName;
+    public String getAttribute() {
+        return attribute;
     }
 
-    public void setAttributeName(String attributeName) {
-        this.attributeName = attributeName;
+    public void setAttribute(String attribute) {
+        this.attribute = attribute;
     }
 
     public String getAttributeValue() {
@@ -114,22 +145,6 @@ public class JsoupModel {
 
     public void setAttributeValue(String attributeValue) {
         this.attributeValue = attributeValue;
-    }
-
-    public String getProperName() {
-        return properName;
-    }
-
-    public void setProperName(String properName) {
-        this.properName = properName;
-    }
-
-    public String getProperValue() {
-        return properValue;
-    }
-
-    public void setProperValue(String properValue) {
-        this.properValue = properValue;
     }
 
     public boolean isFlag() {

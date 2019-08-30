@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 public class JsoupHandle {
 
@@ -113,26 +114,84 @@ public class JsoupHandle {
         return strs;
     }
 
-    public JsoupModel getElements(JsoupModel jsoupModel) {
-        List<Result> results = new ArrayList<>();
-        Document doc = jsoupModel.getDocument();
-        if (doc != null) {
-            List<Element> elements = doc.getElementsByTag(jsoupModel.getTagName());
-            if (elements != null && elements.size() > 0) {
-                Result result = null;
-                for (Element element : elements) {
-                    result = new Result();
-                    if (!"".equals(jsoupModel.getKey())) {
-                        result.setValue(element.attr(jsoupModel.getValue()));
-                    } else {
-                        result.setValue(element.text());
-                    }
-                    results.add(result);
-                }
-                jsoupModel.setResults(results);
+    public static JsoupModel getElements(JsoupModel jsoupModel) {
+        Elements elements = null;
+        Element element = null;
+        Document document = jsoupModel.getDocument();
+        if (StringUtils.isNotEmpty(jsoupModel.getInnerHTML())) {
+            if (jsoupModel.isFirst()) {
+                element = document.select(jsoupModel.getSelector()).first();
+            } else if (jsoupModel.isLast()) {
+                element = document.select(jsoupModel.getSelector()).last();
             }
         }
-        return jsoupModel;
+        if (element != null) {
+            jsoupModel.setHtml(element.toString());
+            return jsoupModel.clearModel();
+        }
+        if (StringUtils.isNotEmpty(jsoupModel.getTagName())) {
+            if (jsoupModel.isFirst()) {
+                element = document.select(jsoupModel.getTagName()).first();
+            } else if (jsoupModel.isLast()) {
+                element = document.select(jsoupModel.getTagName()).last();
+            } else {
+                elements = document.getElementsByTag(jsoupModel.getTagName());
+            }
+        }
+        if (jsoupModel.isFirst() || jsoupModel.isLast()) {
+            if (element != null) {
+                jsoupModel.setHtml(element.toString());
+                return jsoupModel.clearModel();
+            }
+        }
+        if (elements != null && elements.size() > 0) {
+            jsoupModel.setHtml(elements.toString());
+            return jsoupModel.clearModel();
+        }
+        if (StringUtils.isNotEmpty(jsoupModel.getAttribute()) && StringUtils.isEmpty(jsoupModel.getAttributeValue())) {
+            //获取包含此attribute（属性）的所有元素及其子元素
+            elements = document.getElementsByAttribute(jsoupModel.getAttribute());
+        } else if (StringUtils.isNotEmpty(jsoupModel.getAttribute()) && StringUtils.isNotEmpty(jsoupModel.getAttributeValue())) {
+            //获得属性名为getAttribute的值，属性值为getAttributeValue的值的元素及其子元素
+            elements = document.getElementsByAttributeValue(jsoupModel.getAttribute(), jsoupModel.getAttributeValue());
+        }
+        if (elements != null && elements.size() > 0) {
+            jsoupModel.setHtml(elements.toString());
+            return jsoupModel.clearModel();
+        }
+        if (StringUtils.isNotEmpty(jsoupModel.getSelector())) {
+            //直接使用css选择器
+            elements = document.select(jsoupModel.getSelector());
+        }
+        if (elements != null && elements.size() > 0) {
+            jsoupModel.setHtml(elements.toString());
+            return jsoupModel.clearModel();
+        }
+        jsoupModel.setHtml("-1");
+        return jsoupModel.clearModel();
+    }
+
+    public static JsoupModel getAttributeValues(JsoupModel jsoupModel) {
+        Document document = jsoupModel.getDocument();
+        Elements elements;
+        if (StringUtils.isNotEmpty(jsoupModel.getTagName())) {
+            elements = document.getElementsByTag(jsoupModel.getTagName());
+        } else {
+            elements = document.getAllElements();
+        }
+        List<Result> results = new ArrayList<>();
+        String attr = jsoupModel.getAttribute();
+        Result result;
+        if (StringUtils.isNotEmpty(attr)) {
+            for (Element element : elements) {
+                result = new Result();
+                result.setKey(jsoupModel.getAttribute());
+                result.setValue(element.attr(attr));
+                results.add(result);
+            }
+            jsoupModel.setResults(results);
+        }
+        return jsoupModel.clearModel();
     }
 
     public static List<?> getElements(String html, String tagName, String attrName, String attrValue,
@@ -156,7 +215,6 @@ public class JsoupHandle {
                         map = new HashMap<>();
                         map.put("name", element.text());
                         if ("attr".equals(propertyName)) {
-                            String srcValue = element.attr(attr);
                             map.put("value", element.attr(attr));
                         } else {
                             map.put("value", element.text());
@@ -176,10 +234,11 @@ public class JsoupHandle {
         }
         return maps;
     }
-    public static List<?> getElements(JsoupModel jsoupModel,String aa) {
+
+    public static List<?> getElements(JsoupModel jsoupModel, String aa) {
         Document document = jsoupModel.getDocument();
-        if (StringUtils.isNotEmpty(jsoupModel.getInnerHTML())){
-            Element element = document.select("a:contains("+jsoupModel.getInnerHTML()+")").last();
+        if (StringUtils.isNotEmpty(jsoupModel.getInnerHTML())) {
+            Element element = document.select("a:contains(" + jsoupModel.getInnerHTML() + ")").last();
             System.out.println(element);
         }
         return null;
