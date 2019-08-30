@@ -43,16 +43,12 @@ public class FileUtils {
             try {
                 osw = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
                 bw = new BufferedWriter(osw);
-                if (object instanceof List) {
-                    for (Map<String, Object> map : (List<Map<String, Object>>) object) {
-                        bw.write(map.get("ip") + ":" + map.get("port") + "\r\n");
-                    }
+                for (Map<String, Object> map : (List<Map<String, Object>>) object) {
+                    bw.write(map.get("ip") + ":" + map.get("port") + "\r\n");
                 }
             } finally {
-                if (bw != null)
-                    bw.close();
-                if (osw != null)
-                    osw.close();
+                close(null, null, null, bw);
+                close(null, null, null, osw);
             }
         }
     }
@@ -81,30 +77,15 @@ public class FileUtils {
                 map.put("port", line.split(":")[1]);
                 maps.add(map);
             }
-            if (maps == null || maps.isEmpty() || maps.size() == 0) {
+            if (maps.isEmpty()) {
                 maps = IPUtil.getIPsMehod();
                 writeFile(maps, url);
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-
+            close(null, null, br, null);
+            close(null, null, reader, null);
         }
         return maps;
     }
@@ -177,7 +158,6 @@ public class FileUtils {
 
     /**
      * 下载视频
-     * java
      *
      * @param httpUrl
      * @param saveToFilePath
@@ -206,23 +186,17 @@ public class FileUtils {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (inStream != null) {
-                try {
-                    inStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            close(inStream, fos, null, null);
         }
     }
 
+    /**
+     * 处理保存路径
+     *
+     * @param url
+     * @param saveToFilePath
+     * @return
+     */
     public static String dealFileSavePath(String url, String saveToFilePath) {
         if (StringUtils.isEmpty(url) || StringUtils.isEmpty(saveToFilePath)) {
             throw new RuntimeException("url or saveToFilePath is null...");
@@ -234,5 +208,73 @@ public class FileUtils {
             return saveToFilePath + url.substring(url.lastIndexOf("/"));
         }
 
+    }
+
+
+    /**
+     * 追加信息到文件
+     *
+     * @param fileName
+     * @param info
+     */
+    public static void appendInfoToFile(String fileName, String info) {
+        File file = new File(fileName);
+        try (FileWriter fileWriter = new FileWriter(file, true)) {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            info = info + System.getProperty("line.separator");
+            fileWriter.write(info);
+            fileWriter.flush();
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 清空已有的文件内容，以便下次重新写入新的内容
+     *
+     * @param fileName
+     */
+    public static void clearFile(String fileName) {
+        File file = new File(fileName);
+        try (FileWriter fileWriter = new FileWriter(file)) {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            fileWriter.write("");
+            fileWriter.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void close(InputStream inputStream, OutputStream outputStream, Reader reader, Writer writer) {
+        try {
+            if (inputStream != null)
+                inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            if (outputStream != null)
+                inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            if (reader != null)
+                reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            if (writer != null)
+                writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
