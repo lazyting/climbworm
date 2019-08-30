@@ -1,8 +1,8 @@
 package com.haveatry.climbworm.model;
 
 public class Result {
-    private String key;
-    private String value;
+    private String key;//结果键
+    private String value;//结果值
 
     public String getKey() {
         return key;

@@ -8,27 +8,40 @@ import java.util.List;
 
 public class JsoupModel {
     private Document document;//html转化的document
-    private String tagName;
-    private String html;
+    private String tagName;//标签名
+    private String html;//html文档
     private String key;
     private String value;
-    private String attrName;
-    private String attrValue;
+    private String attributeName;//属性名
+    private String attributeValue;//属性值
     private String properName;
     private String properValue;
-    private List<Result> results;
+    private List<Result> results;//处理后的结果
     private String innerHTML;
     private boolean flag;
     private Object ext1;
     private Object ext2;
     private Object ext3;
 
-    public JsoupModel() {
-    }
-
     public JsoupModel(String html) {
         this.html = html;
         this.document = Jsoup.parse(html);
+    }
+
+    public JsoupModel useTgName(String tagName) {
+        this.setTagName(tagName);
+        return this;
+    }
+
+    public JsoupModel useInnerHtml(String innerHTML) {
+        this.setInnerHTML(innerHTML);
+        return this;
+    }
+
+    public JsoupModel useAttribute(String attributeName, String attributeValue) {
+        this.setAttributeName(attributeName);
+        this.setAttributeValue(attributeValue);
+        return this;
     }
 
     public Document getDocument() {
@@ -87,20 +100,20 @@ public class JsoupModel {
         this.html = html;
     }
 
-    public String getAttrName() {
-        return attrName;
+    public String getAttributeName() {
+        return attributeName;
     }
 
-    public void setAttrName(String attrName) {
-        this.attrName = attrName;
+    public void setAttributeName(String attributeName) {
+        this.attributeName = attributeName;
     }
 
-    public String getAttrValue() {
-        return attrValue;
+    public String getAttributeValue() {
+        return attributeValue;
     }
 
-    public void setAttrValue(String attrValue) {
-        this.attrValue = attrValue;
+    public void setAttributeValue(String attributeValue) {
+        this.attributeValue = attributeValue;
     }
 
     public String getProperName() {
