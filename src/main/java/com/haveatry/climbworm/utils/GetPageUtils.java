@@ -22,7 +22,7 @@ import org.jsoup.nodes.Document;
 
 public class GetPageUtils {
     private static int pageSize = 1;
-    private static final String[] charsets = {"ISO8859-1", "UTF-8", "GBK"};
+
 
     /**
      * 发送HttpGet请求获取网页
@@ -160,37 +160,13 @@ public class GetPageUtils {
                 HttpEntity entity = httpResponse.getEntity();
                 String content = EntityUtils.toString(entity);
                 //ISO8859-1 utf-8
-                page = doPageCharset(content);
+                page = StringUtil.doPageCharset(content);
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
         return page;
-    }
-
-    /**
-     * 对页面进行编码处理
-     *
-     * @param content
-     * @return
-     * @throws UnsupportedEncodingException
-     */
-    public static String doPageCharset(String content) throws UnsupportedEncodingException {
-        String returnContent = "";
-        if (StringUtil.isContainChinese(content)) {
-            returnContent = content;
-        } else {
-            String newContent = "";
-            for (int i = 0, size = charsets.length; i < size; i++) {
-                newContent = new String(content.getBytes(charsets[i]), "utf-8");
-                if (StringUtil.isContainChinese(newContent)) {
-                    returnContent = newContent;
-                    break;
-                }
-            }
-        }
-        return returnContent;
     }
 
 
@@ -214,7 +190,7 @@ public class GetPageUtils {
             CloseableHttpResponse httpResponse = client.execute(httpGet);
             HttpEntity entity = httpResponse.getEntity();
             String content = EntityUtils.toString(entity);
-            page = new String(content.getBytes("utf-8"), "utf-8");
+            page = StringUtil.doPageCharset(content);
         } catch (Exception e) {
             e.printStackTrace();
         }
