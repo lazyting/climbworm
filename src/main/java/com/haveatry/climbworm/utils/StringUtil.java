@@ -33,7 +33,7 @@ public class StringUtil {
      * @return
      * @throws UnsupportedEncodingException
      */
-    public static String doPageCharset(String content) throws UnsupportedEncodingException {
+    public static String doStringCharset(String content) throws UnsupportedEncodingException {
         String returnContent = "";
         if (StringUtil.isContainChinese(content)) {
             returnContent = content;

@@ -17,10 +17,7 @@ public class JsoupModel {
     private String selector;//选择器
     private boolean last;
     private boolean first;
-    private boolean flag;
-    private Object ext1;
-    private Object ext2;
-    private Object ext3;
+    private int index;
     private List<Result> results;//处理后的结果
 
     public JsoupModel(String html) {
@@ -29,39 +26,12 @@ public class JsoupModel {
             this.document = Jsoup.parse(html);
     }
 
-    public JsoupModel useTgName(String tagName) {
-        this.setTagName(tagName);
-        return this;
-    }
-
-    public JsoupModel useInnerHtml(String innerHTML) {
-        this.setInnerHTML(innerHTML);
-        return this;
-    }
-
-    public JsoupModel useAttribute(String attribute, String attributeValue) {
-        this.setAttribute(attribute);
-        this.setAttributeValue(attributeValue);
-        return this;
-    }
-
-    public JsoupModel addSelector(String selector) {
-        this.setSelector(selector);
-        return this;
-    }
-
     public JsoupModel clearModel() {
         this.setSelector("");
         this.setTagName("");
         this.setInnerHTML("");
         this.setAttribute("");
         this.setAttributeValue("");
-        return this;
-    }
-
-    public JsoupModel getLastOrFirstEle(boolean first, boolean last) {
-        this.setLast(last);
-        this.setFirst(first);
         return this;
     }
 
@@ -147,35 +117,11 @@ public class JsoupModel {
         this.attributeValue = attributeValue;
     }
 
-    public boolean isFlag() {
-        return flag;
+    public int getIndex() {
+        return index;
     }
 
-    public void setFlag(boolean flag) {
-        this.flag = flag;
-    }
-
-    public Object getExt1() {
-        return ext1;
-    }
-
-    public void setExt1(Object ext1) {
-        this.ext1 = ext1;
-    }
-
-    public Object getExt2() {
-        return ext2;
-    }
-
-    public void setExt2(Object ext2) {
-        this.ext2 = ext2;
-    }
-
-    public Object getExt3() {
-        return ext3;
-    }
-
-    public void setExt3(Object ext3) {
-        this.ext3 = ext3;
+    public void setIndex(int index) {
+        this.index = index;
     }
 }

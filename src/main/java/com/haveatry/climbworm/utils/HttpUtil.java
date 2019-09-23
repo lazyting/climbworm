@@ -12,6 +12,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import utils.PropertyUtil;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -60,8 +61,8 @@ public class HttpUtil {
         httpGet.setConfig(config);// 使用动态ip ，处理网站反爬虫机制
         try {
             config = RequestConfig.custom()
-                    .setConnectTimeout(Integer.parseInt(ResourceUtil.getProperty("connecttimeout")))
-                    .setSocketTimeout(Integer.parseInt(ResourceUtil.getProperty("sockettimeout"))).build();// 设置连接时间，读取时间
+                    .setConnectTimeout(Integer.parseInt(PropertyUtil.getProperty("connecttimeout")))
+                    .setSocketTimeout(Integer.parseInt(PropertyUtil.getProperty("sockettimeout"))).build();// 设置连接时间，读取时间
         } catch (Exception e) {
             e.printStackTrace();
         }

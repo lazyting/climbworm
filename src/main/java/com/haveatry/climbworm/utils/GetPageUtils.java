@@ -19,6 +19,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import utils.PropertyUtil;
 
 public class GetPageUtils {
     private static int pageSize = 1;
@@ -142,7 +143,7 @@ public class GetPageUtils {
         List<Map<String, Object>> ips = null;
         if (ips == null) {
             try {
-                ips = FileUtils.getIPsFromFile(ResourceUtil.getProperty("ip-file"));
+                ips = FileUtils.getIPsFromFile(PropertyUtil.getProperty("ip-file"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -160,7 +161,7 @@ public class GetPageUtils {
                 HttpEntity entity = httpResponse.getEntity();
                 String content = EntityUtils.toString(entity);
                 //ISO8859-1 utf-8
-                page = StringUtil.doPageCharset(content);
+                page = StringUtil.doStringCharset(content);
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -181,7 +182,7 @@ public class GetPageUtils {
         CloseableHttpClient client = HttpClients.createDefault();
         HttpHost proxy = null;
         try {
-            proxy = HttpUtil.getHttpHost(ResourceUtil.getProperty("initIp"), ResourceUtil.getIntProperty("initPort"));
+            proxy = HttpUtil.getHttpHost(PropertyUtil.getProperty("initIp"), PropertyUtil.getIntProperty("initPort"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -190,7 +191,7 @@ public class GetPageUtils {
             CloseableHttpResponse httpResponse = client.execute(httpGet);
             HttpEntity entity = httpResponse.getEntity();
             String content = EntityUtils.toString(entity);
-            page = StringUtil.doPageCharset(content);
+            page = StringUtil.doStringCharset(content);
         } catch (Exception e) {
             e.printStackTrace();
         }
